@@ -21,7 +21,6 @@ import {
 } from "./card";
 import { Label } from "./label";
 
-// Define types for wallet information and balances
 type WalletInfo = {
   publicKey: string;
   privateKey: string;
@@ -36,24 +35,44 @@ type PrivateKeys = {
   [key: string]: boolean;
 };
 
-// Define the type for the props
 interface SolanaWalletProps {
   mnemonic: string;
 }
+
+// Convert lamports to SOL
+const lamportsToSOL = (lamports: number): number => lamports / 1e9;
+
+// Convert SOL to lamports
+const solToLamports = (sol: number): number => sol * 1e9;
 
 const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
   const [currentIndex, setCurrentIndex] = useState<number>(0);
   const [wallets, setWallets] = useState<WalletInfo[]>([]);
   const [balances, setBalances] = useState<Balances>({});
   const [privateKeys, setPrivateKeys] = useState<PrivateKeys>({});
+  const [recipientAddress, setRecipientAddress] = useState<string>("");
+  const [selectedWallet, setSelectedWallet] = useState<string>("");
+
+  const airdropSol = async (publicKey: PublicKey) => {
+    try {
+      const connection = new Connection(
+        "https://solana-devnet.g.alchemy.com/v2/Cf_pytUV3i8t8e2ZdsMOm5ILjHMS2JAi"
+      );
+      const airdropSignature = await connection.requestAirdrop(publicKey, solToLamports(2)); // Request 2 SOL
+      await connection.confirmTransaction(airdropSignature);
+      console.log("Airdrop successful!");
+    } catch (err) {
+      console.log("Error during airdrop:", err);
+    }
+  };
 
   const fetchBalance = async (publicKey: string) => {
     try {
       const connection = new Connection(
-        "https://solana-mainnet.g.alchemy.com/v2/Cf_pytUV3i8t8e2ZdsMOm5ILjHMS2JAi"
+        "https://solana-devnet.g.alchemy.com/v2/Cf_pytUV3i8t8e2ZdsMOm5ILjHMS2JAi"
       );
       const balance = await connection.getBalance(new PublicKey(publicKey));
-      const balanceInSol = balance / 1e9; // Convert lamports to SOL
+      const balanceInSol = lamportsToSOL(balance); // Convert lamports to SOL
 
       setBalances((prev) => ({
         ...prev,
@@ -77,9 +96,11 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
         {
           publicKey: keypair.publicKey.toBase58(),
           privateKey: Buffer.from(secret).toString("hex"),
-          keypair, // Store the full Keypair object for easy access later( in sendTransactions or for other realted operations.)
+          keypair,
         },
       ]);
+
+      await airdropSol(keypair.publicKey); // Airdrop SOL after wallet creation
 
       setCurrentIndex((prev) => prev + 1);
     } catch (err) {
@@ -99,30 +120,50 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
   };
 
   const sendTransactions = async (): Promise<void> => {
+    if (!selectedWallet || !recipientAddress) {
+      console.log("Please select a wallet and enter a recipient address.");
+      return;
+    }
+
     try {
       const connection = new Connection(
-        "https://solana-mainnet.g.alchemy.com/v2/Cf_pytUV3i8t8e2ZdsMOm5ILjHMS2JAi"
+        "https://solana-devnet.g.alchemy.com/v2/Cf_pytUV3i8t8e2ZdsMOm5ILjHMS2JAi"
       );
-      for (const wallet of wallets) {
-        const transaction = new Transaction().add(
-          SystemProgram.transfer({
-            fromPubkey: new PublicKey(wallet.publicKey), // sender's id
-            toPubkey: new PublicKey(wallet.publicKey), // recipient's id
-            lamports: 1000000, // Amount to send (in lamports)
-          })
-        );
-        transaction.sign(wallet.keypair);
+      const wallet = wallets.find(
+        (w) => w.publicKey === selectedWallet
+      );
 
-        const signature = await connection.sendTransaction(transaction, [
-          wallet.keypair,
-        ]);
-
-        await connection.confirmTransaction(signature, "processed");
-
-        console.log(`Transaction sent : ${signature}`);
+      if (!wallet) {
+        console.log("Selected wallet not found.");
+        return;
       }
+
+      const { blockhash } = await connection.getLatestBlockhash();
+
+      const amountInSOL = 1; // Set the amount you want to send in SOL
+      const amountInLamports = solToLamports(amountInSOL); // Convert SOL to lamports
+
+      const transaction = new Transaction({
+        recentBlockhash: blockhash,
+        feePayer: wallet.keypair.publicKey,
+      }).add(
+        SystemProgram.transfer({
+          fromPubkey: wallet.keypair.publicKey, // sender's id
+          toPubkey: new PublicKey(recipientAddress), // recipient's id from input
+          lamports: amountInLamports, // Amount to send (in lamports)
+        })
+      );
+      transaction.sign(wallet.keypair);
+
+      const signature = await connection.sendTransaction(transaction, [
+        wallet.keypair,
+      ]);
+
+      await connection.confirmTransaction(signature, "processed");
+
+      console.log(`Transaction sent: ${signature}`);
     } catch (error) {
-      console.log("Error sending a transaction : ", error);
+      console.log("Error sending a transaction:", error);
     }
   };
 
@@ -134,6 +175,36 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
       >
         Add Wallet
       </Button>
+
+      {/* Recipient Address Input */}
+      <div className="mb-6 w-full max-w-md mx-auto">
+        <Label className="text-white">Recipient Address</Label>
+        <Input
+          type="text"
+          value={recipientAddress}
+          onChange={(e) => setRecipientAddress(e.target.value)}
+          placeholder="Enter recipient public key"
+          className="mt-2 p-2 text-gray-900 bg-white rounded-md w-full"
+        />
+      </div>
+
+      {/* Wallet Selection */}
+      <div className="mb-6 w-full max-w-md mx-auto">
+        <Label className="text-white">Select Wallet</Label>
+        <select
+          value={selectedWallet}
+          onChange={(e) => setSelectedWallet(e.target.value)}
+          className="mt-2 p-2 text-gray-900 bg-white rounded-md w-full"
+        >
+          <option value="">Select a wallet</option>
+          {wallets.map((wallet) => (
+            <option key={wallet.publicKey} value={wallet.publicKey}>
+              {wallet.publicKey}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <div className="bg-slate-950 text-white w-full">
         <div className="w-full flex justify-center items-center flex-col">
           {wallets.map((wallet) => (
@@ -160,49 +231,42 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
                 <div className="text-white mb-4">
                   Balance:{" "}
                   {balances[wallet.publicKey] !== undefined
-                    ? `${balances[wallet.publicKey]} SOL`
-                    : "Loading..."}
+                    ? balances[wallet.publicKey].toFixed(4)
+                    : "Fetching..."}{" "}
+                  SOL
                 </div>
-                <div>
-                  {privateKeys[wallet.publicKey] && (
-                    <textarea
-                      readOnly
-                      value={wallet.privateKey}
-                      className="mt-2 p-2 text-gray-900 bg-white rounded-md w-full h-24 overflow-auto resize-none"
-                    />
-                  )}
-                </div>
-              </CardContent>
-              <CardFooter className="flex justify-between gap-x-4">
                 <Button
-                  variant="outline"
                   onClick={() => fetchBalance(wallet.publicKey)}
-                  className="border border-gray-600  bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300"
+                  className="bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300"
                 >
-                  Check Balance
+                  Fetch Balance
                 </Button>
-
                 <Button
-                  onClick={sendTransactions}
-                  className="mb-6 bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300"
-                >
-                  Send Transactions
-                </Button>
-
-                <Button
-                  variant="outline"
                   onClick={() => togglePrivateKeys(wallet.publicKey)}
-                  className="border border-gray-600  bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300"
+                  className="bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300 mt-4"
                 >
-                  {privateKeys[wallet.publicKey]
-                    ? "Hide Private Key"
-                    : "Show Private Key"}
+                  {privateKeys[wallet.publicKey] ? "Hide" : "Show"} Private Key
                 </Button>
-              </CardFooter>
+                {privateKeys[wallet.publicKey] && (
+                  <Input
+                    type="text"
+                    readOnly
+                    value={wallet.privateKey}
+                    className="mt-2 p-2 text-gray-900 bg-white rounded-md w-full"
+                  />
+                )}
+              </CardContent>
             </Card>
           ))}
         </div>
       </div>
+
+      <Button
+        onClick={sendTransactions}
+        className="bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300"
+      >
+        Send Transaction
+      </Button>
     </>
   );
 };
