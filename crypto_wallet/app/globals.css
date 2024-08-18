@@ -67,3 +67,7 @@
     @apply bg-background text-foreground;
   }
 }
+
+Button{
+  @apply border border-gray-600  bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300;
+}

@@ -1,0 +1,296 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "eth_getBalance - Ethereum",
+    "version": "1.0"
+  },
+  "servers": [
+    {
+      "url": "https://{network}.g.alchemy.com/v2/",
+      "variables": {
+        "network": {
+          "enum": [
+            "eth-mainnet",
+            "eth-sepolia",
+            "eth-holesky"
+          ],
+          "default": "eth-mainnet"
+        }
+      }
+    }
+  ],
+  "x-sandbox": {
+    "category": {
+      "type": {
+        "name": "category",
+        "type": "string",
+        "enum": [
+          "core",
+          "bundler",
+          "nft",
+          "token",
+          "transfers",
+          "transaction-receipts",
+          "gas-manager",
+          "trace",
+          "debug",
+          "gas-optimized-transactions",
+          "private-transactions",
+          "notify",
+          "transaction-simulation"
+        ]
+      },
+      "value": "core"
+    }
+  },
+  "paths": {
+    "/{apiKey}": {
+      "post": {
+        "summary": "eth_getBalance - Ethereum",
+        "description": "Returns the balance of the account of a given address.",
+        "tags": [],
+        "parameters": [
+          {
+            "name": "apiKey",
+            "in": "path",
+            "schema": {
+              "type": "string",
+              "default": "docs-demo",
+              "description": "<style>\n  .custom-style {\n    color: #048FF4;\n  }\n</style>\nFor higher throughput, <span class=\"custom-style\"><a href=\"https://alchemy.com/?a=docs-demo\" target=\"_blank\">create your own API key</a></span>\n"
+            },
+            "required": true
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "allOf": [
+                  {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "integer",
+                        "default": 1
+                      },
+                      "jsonrpc": {
+                        "type": "string",
+                        "default": "2.0"
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "title": "Address and Block Number, Tag, or Hash",
+                    "properties": {
+                      "params": {
+                        "type": "array",
+                        "description": "1. String - 20 Bytes - Address\n2. String - Either the hex value of a **block number** OR a **block hash** OR One of the following **block tags**:\n    * `pending` - A sample next block built by the client on top of latest and containing the set of transactions usually taken from local mempool. Intuitively, you can think of these as blocks that have not been mined yet.\n    * `latest` - The most recent block in the canonical chain observed by the client, this block may be re-orged out of the canonical chain even under healthy/normal conditions.\n    * `earliest` - The lowest numbered block the client has available. Intuitively, you can think of this as the first block created.\n",
+                        "minItems": 2,
+                        "maxItems": 2,
+                        "items": {
+                          "type": "string"
+                        },
+                        "default": [
+                          "0xe5cB067E90D5Cd1F8052B83562Ae670bA4A211a8",
+                          "latest"
+                        ]
+                      }
+                    }
+                  },
+                  {
+                    "type": "object",
+                    "properties": {
+                      "method": {
+                        "default": "eth_getBalance",
+                        "type": "string"
+                      }
+                    }
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "x-readme": {
+          "samples-languages": [
+            "curl",
+            "javascript",
+            "python"
+          ],
+          "code-samples": [
+            {
+              "language": "javascript",
+              "name": "Alchemy SDK",
+              "code": "// Setup: npm install alchemy-sdk\n// Github: https://github.com/alchemyplatform/alchemy-sdk-js\nimport { Network, Alchemy } from \"alchemy-sdk\";\n\n// Optional config object, but defaults to demo api-key and eth-mainnet.\nconst settings = {\n  apiKey: \"demo\", // Replace with your Alchemy API Key.\n  network: Network.ETH_MAINNET, // Replace with your network.\n};\nconst alchemy = new Alchemy(settings);\n\nalchemy.core.getBalance(\"vitalik.eth\", \"latest\").then(console.log);\n"
+            }
+          ]
+        },
+        "responses": {
+          "200": {
+            "description": "Returns hex value of the current ETH balance for the given address, measured in wei.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "jsonrpc": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "result": {
+                          "type": "string"
+                        }
+                      },
+                      "example": {
+                        "jsonrpc": "2.0",
+                        "id": 1,
+                        "result": "0xb1770efb14906e509893b6190359658208ae64d0c56e22f748a1b0869885559e"
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "operationId": "eth-getBalance"
+      }
+    }
+  },
+  "components": {
+    "pathItems": {
+      "path": {
+        "post": {
+          "summary": "eth_getBalance - Ethereum",
+          "description": "Returns the balance of the account of a given address.",
+          "tags": [],
+          "parameters": [
+            {
+              "name": "apiKey",
+              "in": "path",
+              "schema": {
+                "type": "string",
+                "default": "docs-demo",
+                "description": "<style>\n  .custom-style {\n    color: #048FF4;\n  }\n</style>\nFor higher throughput, <span class=\"custom-style\"><a href=\"https://alchemy.com/?a=docs-demo\" target=\"_blank\">create your own API key</a></span>\n"
+              },
+              "required": true
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "allOf": [
+                    {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer",
+                          "default": 1
+                        },
+                        "jsonrpc": {
+                          "type": "string",
+                          "default": "2.0"
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "title": "Address and Block Number, Tag, or Hash",
+                      "properties": {
+                        "params": {
+                          "type": "array",
+                          "description": "1. String - 20 Bytes - Address\n2. String - Either the hex value of a **block number** OR a **block hash** OR One of the following **block tags**:\n    * `pending` - A sample next block built by the client on top of latest and containing the set of transactions usually taken from local mempool. Intuitively, you can think of these as blocks that have not been mined yet.\n    * `latest` - The most recent block in the canonical chain observed by the client, this block may be re-orged out of the canonical chain even under healthy/normal conditions.\n    * `earliest` - The lowest numbered block the client has available. Intuitively, you can think of this as the first block created.\n",
+                          "minItems": 2,
+                          "maxItems": 2,
+                          "items": {
+                            "type": "string"
+                          },
+                          "default": [
+                            "0xe5cB067E90D5Cd1F8052B83562Ae670bA4A211a8",
+                            "latest"
+                          ]
+                        }
+                      }
+                    },
+                    {
+                      "type": "object",
+                      "properties": {
+                        "method": {
+                          "default": "eth_getBalance",
+                          "type": "string"
+                        }
+                      }
+                    }
+                  ]
+                }
+              }
+            }
+          },
+          "x-readme": {
+            "samples-languages": [
+              "curl",
+              "javascript",
+              "python"
+            ],
+            "code-samples": [
+              {
+                "language": "javascript",
+                "name": "Alchemy SDK",
+                "code": "// Setup: npm install alchemy-sdk\n// Github: https://github.com/alchemyplatform/alchemy-sdk-js\nimport { Network, Alchemy } from \"alchemy-sdk\";\n\n// Optional config object, but defaults to demo api-key and eth-mainnet.\nconst settings = {\n  apiKey: \"demo\", // Replace with your Alchemy API Key.\n  network: Network.ETH_MAINNET, // Replace with your network.\n};\nconst alchemy = new Alchemy(settings);\n\nalchemy.core.getBalance(\"vitalik.eth\", \"latest\").then(console.log);\n"
+              }
+            ]
+          },
+          "responses": {
+            "200": {
+              "description": "Returns hex value of the current ETH balance for the given address, measured in wei.",
+              "content": {
+                "application/json": {
+                  "schema": {
+                    "allOf": [
+                      {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "jsonrpc": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "properties": {
+                          "result": {
+                            "type": "string"
+                          }
+                        },
+                        "example": {
+                          "jsonrpc": "2.0",
+                          "id": 1,
+                          "result": "0xb1770efb14906e509893b6190359658208ae64d0c56e22f748a1b0869885559e"
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          },
+          "operationId": "eth-getBalance"
+        }
+      }
+    }
+  }
+}

@@ -9,11 +9,13 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@api/alchemy-docs": "file:.api/apis/alchemy-docs",
     "@radix-ui/react-icons": "^1.3.0",
     "@radix-ui/react-label": "^2.1.0",
     "@radix-ui/react-select": "^2.1.1",
     "@radix-ui/react-slot": "^1.1.0",
     "@solana/web3.js": "^1.95.2",
+    "axios": "^1.7.4",
     "bip39": "^3.1.0",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
