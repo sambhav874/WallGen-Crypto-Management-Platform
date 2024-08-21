@@ -10,7 +10,13 @@ export default function Home() {
   const [mnemonic, setMnemonic] = useState("");
 
   return (
-    <main className="flex min-h-screen flex-col items-center bg-slate-950 justify-between p-24">
+    <main className=" min-h-screen  flex-col  items-center bg-slate-950 justify-between p-24 ">
+      
+      <div className="flex justify-center items-center mb-8">
+          <p className="text-white font-mono text-6xl leading-relaxed tracking-wider font-extralight hover:font-bold duration-300">
+            Create Wallets
+          </p>
+        </div>
       <div className="z-10 w-full  dark:bg-zinc-800/30 font-mono text-sm lg:flex flex-col items-center">
         {/* Mnemonic Input and Create Button */}
         <div className="flex justify-center w-full items-center gap-8 mb-8">
@@ -31,23 +37,19 @@ export default function Home() {
         </div>
 
         {/* Title */}
-        <div className="flex justify-center items-center mb-8">
-          <p className="text-white font-sans text-4xl italic font-extralight">
-            Create Wallets
-          </p>
-        </div>
+       
 
         {/* Wallet Sections */}
         <div className="flex justify-between w-full">
           {/* Solana Wallet on the Left */}
           <div className="w-1/2 flex flex-col items-center">
-            <h2 className="text-2xl text-white mb-4">Solana Wallet</h2>
+            <h2 className="text-2xl font-extralight hover:font-bold duration-300 text-white mb-4">Solana Wallet</h2>
             <SolanaWallet mnemonic={mnemonic} />
           </div>
 
           {/* ETH Wallet on the Right */}
           <div className="w-1/2 flex flex-col items-center">
-            <h2 className="text-2xl text-white mb-4">ETH Wallet</h2>
+            <h2 className="text-2xl font-extralight hover:font-bold duration-300 text-white mb-4">ETH Wallet</h2>
             <EthWallet mnemonic={mnemonic} />
           </div>
         </div>

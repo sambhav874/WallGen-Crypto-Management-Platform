@@ -71,3 +71,11 @@
 Button{
   @apply border border-gray-600  bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300;
 }
+
+.right{
+  @apply text-right;
+}
+
+.left{
+  @apply text-left;
+}
