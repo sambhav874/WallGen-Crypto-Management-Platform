@@ -18,6 +18,7 @@ import axios from 'axios';
 
 import EthWalletSelection from "./ETHSelectWallet";
 import { Textarea } from "./textarea";
+import { Badge } from "./badge";
 
 
 
@@ -204,62 +205,64 @@ const EthWallet: React.FC<EthWalletProps> = ({ mnemonic }) => {
         Send Transaction
       </Button>
 
-      {ethWallets.map((ethWallet) => (
+      {ethWallets.map((ethWallet , index) => (
         <Card
-          key={ethWallet.publicKey}
-          className="bg-slate-950 shadow-lg w-[75%] hover:shadow-xl transition-shadow duration-300 rounded-lg mb-6"
-        >
-          <CardHeader>
-            <CardTitle className="text-white">Wallet</CardTitle>
-            <CardDescription className="text-white mt-2 font-sans text-lg">
-              Your own crypto wallet!
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="mb-4">
-              <Label className="text-white">Public Key</Label>
-              <Input
-                type="text"
+        key={`${ethWallet.publicKey}-${index}`}
+        className="bg-slate-950 shadow-lg w-auto hover:shadow-xl transition-shadow duration-300 rounded-lg mb-6"
+      >
+        <CardHeader>
+          <CardTitle className="text-white">Wallet</CardTitle>
+          <CardDescription className="text-white">
+            <span className="text-xs text-gray-500">
+              Click here to copy your public key.
+            </span>
+          </CardDescription>
+        </CardHeader>
+        <CardContent className="flex flex-col space-y-2 ">
+          <div className="flex items-center justify-center ">
+            <Badge
+              onClick={() =>
+                navigator.clipboard.writeText(ethWallet.publicKey)
+              }
+              className="font-bold text-gray-400 text-md md:text-sm hover:text-white cursor-pointer"
+            >
+              {ethWallet.publicKey}
+            </Badge>
+            
+          </div>
+          {privateKeys[ethWallet.publicKey] && (
+            <div>
+              <Label className="text-white">Private Key</Label>
+              <Textarea
+                value={ethWallet.privateKey}
                 readOnly
-                value={ethWallet.publicKey}
-                className="mt-2 p-2 text-gray-900 bg-white rounded-md w-full"
+                className="text-white bg-gray-800 p-2 w-full h-24"
               />
             </div>
-            <div className="text-white mb-4">
-              Balance:{" "}
-              {balances[ethWallet.publicKey] !== undefined
-                ? `${balances[ethWallet.publicKey]} ETH`
-                : "Loading..."}
-            </div>
-            <div>
-              {privateKeys[ethWallet.publicKey] && (
-                <Textarea
-                  readOnly
-                  value={ethWallet.privateKey}
-                  className="mt-2 p-2 text-white hover:text-slate-900 tracking-widest bg-gray-800 hover:bg-gray-600 duration-300 rounded-md w-full h-24 overflow-auto resize-none"
-                />
-              )}
-            </div>
-          </CardContent>
-          <CardFooter className="flex justify-between items-center">
+          )}
+          
+          <div className="text-white">
+            Balance: {balances[ethWallet.publicKey] || 0} SOL
+          </div>
           <Button
-                  variant="outline"
-                  onClick={() => fetchBalance(ethWallet.publicKey)}
-                  className="border border-gray-600  bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300"
-                >
-                  Check Balance
-                </Button>
-            <Button
-              variant="outline"
               onClick={() => togglePrivateKeys(ethWallet.publicKey)}
-              className="border border-gray-600 bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300"
+              className="bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300"
             >
-              {privateKeys[ethWallet.publicKey]
-                ? "Hide Private Key"
-                : "Show Private Key"}
+              {privateKeys[ethWallet.publicKey] ? "Hide Private Key" : "Show Private Key"}
             </Button>
-          </CardFooter>
-        </Card>
+        </CardContent>
+        <CardFooter className="flex justify-between items-center">
+        
+          
+
+          <Button
+            onClick={() => fetchBalance(ethWallet.publicKey)}
+            className="bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300 mt-2"
+          >
+            Fetch Balance
+          </Button>
+        </CardFooter>
+      </Card>
       ))}
       
     </>

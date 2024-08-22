@@ -25,9 +25,7 @@ const TransactionsPage = () => {
     fetchTransactions();
   }, []);
 
-  const getTransactionDetails = () => {
-
-  }
+  
 
   return (
     <div className="bg-gray-900 text-white p-6 min-h-screen">
