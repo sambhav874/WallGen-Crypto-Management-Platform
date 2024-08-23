@@ -22,7 +22,7 @@ const TransactionDetailsPage = () => {
 
     try {
       const connection = new Connection(
-        "https://solana-devnet.g.alchemy.com/v2/Cf_pytUV3i8t8e2ZdsMOm5ILjHMS2JAi"
+        process.env.SOL_API_ROUTE as string
       );
       const data = await connection.getTransaction(signature);
 
@@ -81,19 +81,19 @@ const TransactionDetailsPage = () => {
             View Transaction Details
           </Button>
         </DrawerTrigger>
-        <DrawerContent className="max-h-full bg-slate-950 p-6 md:p-4 lg:p-8">
+        <DrawerContent className="max-h-full bg-slate-950 p-4 md:p-2 lg:p-6">
           <div className="mx-auto w-full">
             <DrawerHeader className="text-center">
               <DrawerTitle className="text-white text-xl md:text-2xl lg:text-3xl font-sans font-extralight leading-relaxed tracking-widest">
                 Transaction Details
               </DrawerTitle>
               <DrawerDescription className="text-white text-lg md:text-xl lg:text-2xl mt-2">
-                Signature: <Badge className="bg-slate-800 text-white text-sm md:text-lg lg:text-xl">{signature}</Badge>
+                Signature: <Badge className="bg-slate-800 mt-2 text-white text-sm md:text-lg lg:text-xl">{signature}</Badge>
               </DrawerDescription>
             </DrawerHeader>
-            <div className="p-4 space-y-6">
+            <div className="p-2 space-y-0">
               {details ? (
-                <div className="p-4 rounded-lg flex flex-col shadow-md w-full space-y-4 bg-slate-900">
+                <div className="p-4 rounded-lg flex md:p-2 md:mb-4 flex-col shadow-md w-full space-y-4 md:space-y-0 bg-slate-950">
                   {[
                     { label: "Block Time:", value: details.blockTime },
                     { label: "Compute Units Consumed:", value: details.meta.computeUnitsConsumed },
@@ -103,7 +103,7 @@ const TransactionDetailsPage = () => {
                   ].map((item, index) => (
                     <div
                       key={index}
-                      className="flex justify-between items-center tracking-wider leading-6 hover:border-b-2 hover:border-gray-400 pb-2 transition-all duration-300 ease-in-out"
+                      className="flex justify-between items-center  tracking-wider leading-6 hover:border-b-2 hover:border-gray-400 pb-2 transition-all duration-300 ease-in-out"
                     >
                       <p className="text-sm md:text-base lg:text-xl tracking-wider leading-6 font-extralight hover:font-bold text-white font-mono duration-300">
                         {item.label}
@@ -112,11 +112,11 @@ const TransactionDetailsPage = () => {
                     </div>
                   ))}
 
-                  <div className="space-y-2">
+                  <div className="flex justify-between gap-4 hover:border-b-2 tracking-wider leading-6 hover:border-gray-400 pb-2 transition-all duration-300 ease-in-out">
                     <p className="text-sm md:text-base lg:text-xl font-extralight tracking-wider leading-6 hover:font-bold text-white font-mono duration-300">
                       Pre Balance:
                     </p>
-                    <div className="ml-4 flex justify-end gap-4 hover:border-b-2 tracking-wider leading-6 hover:border-gray-400 pb-2 transition-all duration-300 ease-in-out">
+                    <div className="  flex gap-2">
                       <Badge className="bg-gray-700 text-sm md:text-base lg:text-xl tracking-wider leading-6 p-2 text-white">
                         Sender: {lamportsToSOL(details.meta.preBalances[0])} SOL
                       </Badge>
@@ -126,11 +126,11 @@ const TransactionDetailsPage = () => {
                     </div>
                   </div>
 
-                  <div className="space-y-2">
+                  <div className="flex justify-between gap-4 hover:border-b-2 tracking-wider leading-6 hover:border-gray-400 pb-2 transition-all duration-300 ease-in-out">
                     <p className="text-sm md:text-base lg:text-xl font-extralight hover:font-bold tracking-wider leading-6 text-white font-mono duration-300">
                       Post Balance:
                     </p>
-                    <div className="ml-4 flex justify-end gap-4 hover:border-b-2 tracking-wider leading-6 hover:border-gray-400 pb-2 transition-all duration-300 ease-in-out">
+                    <div className="flex gap-2">
                       <Badge className="bg-gray-700 text-sm md:text-base lg:text-xl p-2 tracking-wider leading-6 text-white">
                         Sender: {lamportsToSOL(details.meta.postBalances[0])} SOL
                       </Badge>
@@ -140,7 +140,7 @@ const TransactionDetailsPage = () => {
                     </div>
                   </div>
 
-                  <div className="flex justify-between items-center tracking-wider leading-6 hover:border-b-2 hover:border-gray-400 pb-2 transition-all duration-300 ease-in-out">
+                  <div className="flex justify-between items-center tracking-wider leading-6 hover:border-b-2 hover:border-gray-400 transition-all duration-300 ease-in-out">
                     <p className="text-sm md:text-base lg:text-xl font-extralight hover:font-bold tracking-wider leading-8 text-white font-mono duration-300">
                       Recent Block Hash:
                     </p>

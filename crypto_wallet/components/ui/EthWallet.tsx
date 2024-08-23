@@ -80,7 +80,7 @@ const EthWallet: React.FC<EthWalletProps> = ({ mnemonic }) => {
       const faucetAmount = '0.1'; // 0.1 ETH
   
       // Create a provider
-      const provider = new ethers.JsonRpcProvider("https://eth-sepolia.g.alchemy.com/v2/Cf_pytUV3i8t8e2ZdsMOm5ILjHMS2JAi");
+      const provider = new ethers.JsonRpcProvider(process.env.ETH_API_ROUTE as string);
   
       // Connect the wallet to the provider
       const connectedWallet = wallet.connect(provider);
@@ -109,7 +109,7 @@ const EthWallet: React.FC<EthWalletProps> = ({ mnemonic }) => {
     }
 
     try {
-      const provider = new ethers.JsonRpcProvider("https://eth-mainnet.g.alchemy.com/v2/Cf_pytUV3i8t8e2ZdsMOm5ILjHMS2JAi");
+      const provider = new ethers.JsonRpcProvider(process.env.ETH_API_ROUTE as string);
 
 
       const selectedWalletInfo = ethWallets.find(wallet => wallet.publicKey === selectedWallet);
@@ -138,7 +138,7 @@ const EthWallet: React.FC<EthWalletProps> = ({ mnemonic }) => {
   const fetchBalance = async (publicKey: string): Promise<string> => {
     try {
       const { data } = await axios.post(
-        "https://eth-mainnet.g.alchemy.com/v2/Cf_pytUV3i8t8e2ZdsMOm5ILjHMS2JAi",
+        process.env.ETH_API_ROUTE as string,
         {
           id: 1,
           jsonrpc: "2.0",

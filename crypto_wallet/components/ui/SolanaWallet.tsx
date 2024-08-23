@@ -61,7 +61,7 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
   const [transactions, setTransactions] = useState<string[]>([]);
 
   const connection = new Connection(
-    "https://solana-devnet.g.alchemy.com/v2/lvR8sVR9IUajQb76SIKKY1-0FehIqTQX"
+    process.env.SOL_API_ROUTE as string
   );
 
   const airdropSol = async (publicKey: PublicKey) => {
@@ -140,6 +140,7 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
   };
 
   const sendTransactions = async (): Promise<void> => {
+    
     if (!selectedWallet || !solRecipientAddress) {
       console.log("Please select a wallet and enter a recipient address.");
       return;
@@ -178,7 +179,7 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
       });
   
       const confirmation = await connection.confirmTransaction(txId, "confirmed");
-  
+  console.log(confirmation);
       setTransactions((prev) => [...prev, txId]);
   
       await fetch("/api/transactions", {
