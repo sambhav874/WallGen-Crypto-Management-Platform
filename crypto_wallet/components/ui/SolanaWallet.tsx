@@ -81,8 +81,8 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
         signature: airdropSignature,
         blockhash: latestBlockhash.blockhash,
         lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
-      });
-  
+      }, 'processed');
+      
       console.log("Airdrop successful!");
     } catch (err) {
       console.log("Error during airdrop:", err);
@@ -111,24 +111,23 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
     }
   
     try {
-      setIsAirdropInProgress(true); // Set airdrop in progress
+      setIsAirdropInProgress(true); 
   
       const seed = await mnemonicToSeed(mnemonic);
       const path = `m/44'/501'/${currentIndex}'/0'`;
       const { key } = derivePath(path, seed.toString("hex"));
       const secret = nacl.sign.keyPair.fromSeed(key).secretKey;
   
-      // Ensure keypair is created with unique secret key
       const keypair = Keypair.fromSecretKey(secret);
       const publicKey = keypair.publicKey.toBase58();
   
-      // Check if the wallet already exists
+      // if the wallet already exists
       const existingWallet = solWallets.find(
         (w) => w.publicKey === publicKey
       );
       if (existingWallet) {
         console.log("Wallet already exists.");
-        setIsAirdropInProgress(false); // Reset airdrop status
+        setIsAirdropInProgress(false); 
         return;
       }
   
@@ -141,13 +140,13 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
         },
       ]);
   
-      await airdropSol(keypair.publicKey); // Airdrop SOL after wallet creation
+      await airdropSol(keypair.publicKey);
   
       setCurrentIndex((prev) => prev + 1);
     } catch (err) {
       console.log("Error Adding Wallet:", err);
     } finally {
-      setIsAirdropInProgress(false); // Reset airdrop status in case of success or error
+      setIsAirdropInProgress(false); 
     }
   };
   
@@ -202,7 +201,7 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
       const txId = await connection.sendTransaction(transaction, [wallet.keypair], {
         skipPreflight: false,
         preflightCommitment: "confirmed",
-        maxRetries: 3 // Increase retries if needed
+        maxRetries: 3 
       });
 
       setTransactions((prev) => {

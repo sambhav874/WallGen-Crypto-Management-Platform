@@ -15,10 +15,10 @@ export default function Home() {
     <main className="min-h-screen flex flex-col items-center bg-slate-950 justify-between p-4 md:p-6 lg:p-8">
       {/* Links */}
       
-        <Link href='/transactions-explorer' className="border border-gray-600 bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300 px-4 absolute top-4 left-4 md:left-2 md:top-2 space-x-2 py-2 rounded-xl text-sm md:text-xs">
+        <Link href='/transactions-explorer' className="border border-gray-600 bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300 px-4 absolute md:top-10 md:left-10 left-2 top-2 md:p-5 space-x-2 py-2 rounded-xl text-sm md:text-lg">
           Transactions Explorer
         </Link>
-        <Link href='/transactions' className="border border-gray-600 bg-gray-800 text-white hover:bg-white absolute top-4 right-4 md:right-2 md:top-2 space-x-2 hover:text-gray-800 transition-colors duration-300 px-4 py-2 rounded-xl text-sm md:text-xs">
+        <Link href='/transactions' className="border border-gray-600 bg-gray-800 text-white hover:bg-white absolute md:top-10 md:right-10 md:p-5  right-2 top-2 space-x-2 hover:text-gray-800 transition-colors duration-300 px-4 py-2 rounded-xl text-sm md:text-lg">
           Transactions
         </Link>
       
