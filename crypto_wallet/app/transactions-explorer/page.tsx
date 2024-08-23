@@ -95,7 +95,7 @@ const TransactionDetailsPage = () => {
             </DrawerHeader>
             <div className="p-2 space-y-0">
               {details ? (
-                <div className="p-4 rounded-lg flex md:p-2 md:mb-4 flex-col shadow-md w-full space-y-4 md:space-y-0 bg-slate-950">
+                <div className="p-4 rounded-lg flex md:p-2 md:mb-4 flex-col shadow-md w-full md:space-y-4 space-y-0 bg-slate-950">
                   {[
                     { label: "Block Time:", value: details.blockTime },
                     { label: "Compute Units Consumed:", value: details.meta.computeUnitsConsumed },
