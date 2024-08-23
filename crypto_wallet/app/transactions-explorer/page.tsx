@@ -6,6 +6,7 @@ import { Connection } from "@solana/web3.js";
 import Link from "next/link";
 import { Input } from "../../components/ui/input";
 import { useState } from "react";
+import { Textarea } from "@/components/ui/textarea";
 
 const lamportsToSOL = (lamports: number): number => lamports / 1e9;
 
@@ -81,15 +82,16 @@ const TransactionDetailsPage = () => {
             View Transaction Details
           </Button>
         </DrawerTrigger>
-        <DrawerContent className="max-h-full bg-slate-950 p-4 md:p-2 lg:p-6">
-          <div className="mx-auto w-full">
-            <DrawerHeader className="text-center">
+        <DrawerContent className="max-h-full bg-slate-950 ">
+          <div className=" w-full">
+            <DrawerHeader >
+            <div className="flex flex-col justify-center items-center">
               <DrawerTitle className="text-white text-xl md:text-2xl lg:text-3xl font-sans font-extralight leading-relaxed tracking-widest">
                 Transaction Details
               </DrawerTitle>
-              <DrawerDescription className="text-white text-lg md:text-xl lg:text-2xl mt-2">
-                Signature: <Badge className="bg-slate-800 mt-2 text-white text-sm md:text-lg lg:text-xl">{signature}</Badge>
-              </DrawerDescription>
+              <DrawerDescription className="text-white text-lg md:text-xl lg:text-2xl mt-2"> 
+                Signature:<Textarea className="bg-slate-800 mt-2 text-white text-sm md:text-sm lg:text-xl w-full " readOnly>{signature}</Textarea>
+              </DrawerDescription></div>
             </DrawerHeader>
             <div className="p-2 space-y-0">
               {details ? (

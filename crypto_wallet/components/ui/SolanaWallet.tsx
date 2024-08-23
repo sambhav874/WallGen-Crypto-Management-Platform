@@ -59,6 +59,7 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
   const [amount, setAmount] = useState<string>("");
   const [selectedWallet, setSelectedWallet] = useState<string>("");
   const [transactions, setTransactions] = useState<string[]>([]);
+  const [isAirdropInProgress , setIsAirdropInProgress] = useState<boolean>(false);
 
   const key = (process.env.NEXT_PUBLIC_SOL_API_ROUTE);
 
@@ -75,6 +76,7 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
         solToLamports(2) // Request 2 SOL
       );
   
+      
       await connection.confirmTransaction({
         signature: airdropSignature,
         blockhash: latestBlockhash.blockhash,
@@ -103,25 +105,33 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
   };
 
   const addWallet = async () => {
+    if (isAirdropInProgress) {
+      console.log("Please wait for the current airdrop to complete.");
+      return;
+    }
+  
     try {
+      setIsAirdropInProgress(true); // Set airdrop in progress
+  
       const seed = await mnemonicToSeed(mnemonic);
       const path = `m/44'/501'/${currentIndex}'/0'`;
       const { key } = derivePath(path, seed.toString("hex"));
       const secret = nacl.sign.keyPair.fromSeed(key).secretKey;
-
+  
       // Ensure keypair is created with unique secret key
       const keypair = Keypair.fromSecretKey(secret);
       const publicKey = keypair.publicKey.toBase58();
-
+  
       // Check if the wallet already exists
       const existingWallet = solWallets.find(
         (w) => w.publicKey === publicKey
       );
       if (existingWallet) {
         console.log("Wallet already exists.");
+        setIsAirdropInProgress(false); // Reset airdrop status
         return;
       }
-
+  
       setSolWallets((prev) => [
         ...prev,
         {
@@ -130,14 +140,17 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
           keypair,
         },
       ]);
-
+  
       await airdropSol(keypair.publicKey); // Airdrop SOL after wallet creation
-
+  
       setCurrentIndex((prev) => prev + 1);
     } catch (err) {
       console.log("Error Adding Wallet:", err);
+    } finally {
+      setIsAirdropInProgress(false); // Reset airdrop status in case of success or error
     }
   };
+  
 
   const togglePrivateKeys = (publicKey: string) => {
     try {
@@ -164,11 +177,11 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
         return;
       }
 
-      const { blockhash } = await connection.getLatestBlockhash();
+      const block = await connection.getLatestBlockhash();
       const amountInLamports = solToLamports(parseFloat(amount));
 
       const transaction = new Transaction({
-        recentBlockhash: blockhash,
+        recentBlockhash: block.blockhash,
         feePayer: wallet.keypair.publicKey,
       }).add(
         SystemProgram.transfer({
@@ -180,12 +193,26 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
 
       transaction.sign(wallet.keypair);
 
+      
+
       const txId = await connection.sendTransaction(transaction, [wallet.keypair], {
         skipPreflight: false,
         preflightCommitment: "confirmed",
+        maxRetries: 2
       });
 
-      await connection.confirmTransaction(txId, "confirmed");
+
+      await connection.confirmTransaction({
+        blockhash: block.blockhash,
+        lastValidBlockHeight: block.lastValidBlockHeight,
+        signature: txId
+       });
+
+       console.log(txId);
+
+       
+
+      
       setTransactions((prev) => [...prev, txId]);
 
       await fetch("/api/transactions", {
@@ -206,11 +233,12 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
   return (
     <>
       <Button
-        onClick={addWallet}
-        className="mb-6 bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300"
-      >
-        Add Wallet
-      </Button>
+  onClick={addWallet}
+  className={`mb-6 bg-gray-800 text-white ${isAirdropInProgress ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white hover:text-gray-800'} transition-colors duration-300`}
+  disabled={isAirdropInProgress}
+>
+  {isAirdropInProgress ? 'Airdrop In Progress...' : 'Add Wallet'}
+</Button>
 
       {/* Recipient Address Input */}
       <div className="mb-6 w-full max-w-md mx-auto">
@@ -270,7 +298,7 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
                     onClick={() =>
                       navigator.clipboard.writeText(wallet.publicKey)
                     }
-                    className="font-bold text-gray-400 text-md md:text-sm hover:text-white cursor-pointer"
+                    className="font-bold text-gray-400 text-md md:text-xs hover:text-white cursor-pointer"
                   >
                     {wallet.publicKey}
                   </Badge>
