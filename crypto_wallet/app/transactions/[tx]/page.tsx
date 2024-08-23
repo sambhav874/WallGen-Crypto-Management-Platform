@@ -27,10 +27,10 @@ const TransactionDetailsPage = () => {
         console.log("No signature found");
         return;
       }
-
+      const key = (process.env.NEXT_PUBLIC_SOL_API_ROUTE);
       try {
         const connection = new Connection(
-          "https://solana-devnet.g.alchemy.com/v2/Cf_pytUV3i8t8e2ZdsMOm5ILjHMS2JAi"
+          `https://solana-devnet.g.alchemy.com/${key}`
         );
         const data = await connection.getTransaction(signature);
 

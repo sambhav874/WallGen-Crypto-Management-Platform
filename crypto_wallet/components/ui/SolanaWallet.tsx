@@ -60,22 +60,33 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
   const [selectedWallet, setSelectedWallet] = useState<string>("");
   const [transactions, setTransactions] = useState<string[]>([]);
 
+  const key = (process.env.NEXT_PUBLIC_SOL_API_ROUTE);
+
   const connection = new Connection(
-    process.env.SOL_API_ROUTE as string
+    `https://solana-devnet.g.alchemy.com/${key}`
   );
 
   const airdropSol = async (publicKey: PublicKey) => {
     try {
+      const latestBlockhash = await connection.getLatestBlockhash();
+  
       const airdropSignature = await connection.requestAirdrop(
         publicKey,
         solToLamports(2) // Request 2 SOL
       );
-      await connection.confirmTransaction(airdropSignature, "confirmed");
+  
+      await connection.confirmTransaction({
+        signature: airdropSignature,
+        blockhash: latestBlockhash.blockhash,
+        lastValidBlockHeight: latestBlockhash.lastValidBlockHeight,
+      });
+  
       console.log("Airdrop successful!");
     } catch (err) {
       console.log("Error during airdrop:", err);
     }
   };
+  
 
   const fetchBalance = async (publicKey: string) => {
     try {
@@ -140,25 +151,22 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
   };
 
   const sendTransactions = async (): Promise<void> => {
-    
     if (!selectedWallet || !solRecipientAddress) {
       console.log("Please select a wallet and enter a recipient address.");
       return;
     }
-  
+
     try {
       const wallet = solWallets.find((w) => w.publicKey === selectedWallet);
-  
+
       if (!wallet) {
         console.log("Selected wallet not found.");
         return;
       }
-  
+
       const { blockhash } = await connection.getLatestBlockhash();
-  
-      const amountInSOL = parseFloat(amount);
-      const amountInLamports = solToLamports(amountInSOL);
-  
+      const amountInLamports = solToLamports(parseFloat(amount));
+
       const transaction = new Transaction({
         recentBlockhash: blockhash,
         feePayer: wallet.keypair.publicKey,
@@ -169,19 +177,17 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
           lamports: amountInLamports,
         })
       );
-  
-      // Sign the transaction
+
       transaction.sign(wallet.keypair);
-  
+
       const txId = await connection.sendTransaction(transaction, [wallet.keypair], {
         skipPreflight: false,
         preflightCommitment: "confirmed",
       });
-  
-      const confirmation = await connection.confirmTransaction(txId, "confirmed");
-  console.log(confirmation);
+
+      await connection.confirmTransaction(txId, "confirmed");
       setTransactions((prev) => [...prev, txId]);
-  
+
       await fetch("/api/transactions", {
         method: "POST",
         headers: {
@@ -189,7 +195,7 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
         },
         body: JSON.stringify({ transaction: txId }),
       });
-  
+
       console.log(`Transaction sent: ${txId}`);
       router.push("/transactions");
     } catch (error) {
