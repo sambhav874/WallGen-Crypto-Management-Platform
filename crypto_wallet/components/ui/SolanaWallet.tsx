@@ -297,7 +297,7 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
                     onClick={() =>
                       navigator.clipboard.writeText(wallet.publicKey)
                     }
-                    className="font-bold text-gray-400 text-md md:text-xs hover:text-white cursor-pointer"
+                    className="font-bold text-gray-400 text-xs md:text-lg hover:text-white cursor-pointer"
                   >
                     {wallet.publicKey}
                   </Badge>
@@ -335,7 +335,7 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
 
                 <Button
                   onClick={() => fetchBalance(wallet.publicKey)}
-                  className="bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300 mt-2"
+                  className="bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300 "
                 >
                   Fetch Balance
                 </Button>

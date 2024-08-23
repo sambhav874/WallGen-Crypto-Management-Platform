@@ -224,7 +224,7 @@ const EthWallet: React.FC<EthWalletProps> = ({ mnemonic }) => {
               onClick={() =>
                 navigator.clipboard.writeText(ethWallet.publicKey)
               }
-              className="font-bold text-gray-400 text-md md:text-sm hover:text-white cursor-pointer"
+              className="font-bold text-gray-400 text-xs md:text-lg hover:text-white cursor-pointer"
             >
               {ethWallet.publicKey}
             </Badge>
@@ -251,10 +251,7 @@ const EthWallet: React.FC<EthWalletProps> = ({ mnemonic }) => {
               {privateKeys[ethWallet.publicKey] ? "Hide Private Key" : "Show Private Key"}
             </Button>
         </CardContent>
-        <CardFooter className="flex justify-between items-center">
-        
-          
-
+        <CardFooter className="flex justify-center items-center">
           <Button
             onClick={() => fetchBalance(ethWallet.publicKey)}
             className="bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300 mt-2"
