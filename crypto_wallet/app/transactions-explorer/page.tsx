@@ -95,7 +95,7 @@ const TransactionDetailsPage = () => {
             </DrawerHeader>
             <div className="p-2 space-y-0">
               {details ? (
-                <div className="p-4 rounded-lg flex md:p-2 md:mb-4 flex-col shadow-md w-full md:space-y-4 space-y-0 bg-slate-950">
+                <div className="p-2 rounded-lg flex md:p-2 md:mb-4 flex-col shadow-md w-full md:space-y-4 space-y-0 bg-slate-950">
                   {[
                     { label: "Block Time:", value: details.blockTime },
                     { label: "Compute Units Consumed:", value: details.meta.computeUnitsConsumed },
@@ -110,7 +110,7 @@ const TransactionDetailsPage = () => {
                       <p className="text-sm md:text-base lg:text-xl tracking-wider leading-6 font-extralight hover:font-bold text-white font-mono duration-300">
                         {item.label}
                       </p>
-                      <Badge className="bg-gray-700 text-sm md:text-base lg:text-xl p-2 text-white">{item.value}</Badge>
+                      <Badge className="bg-gray-700 text-xs md:text-base  lg:text-xl p-2 text-white">{item.value}</Badge>
                     </div>
                   ))}
 
@@ -119,10 +119,10 @@ const TransactionDetailsPage = () => {
                       Pre Balance:
                     </p>
                     <div className="  flex gap-2">
-                      <Badge className="bg-gray-700 text-sm md:text-base lg:text-xl tracking-wider leading-6 p-2 text-white">
+                      <Badge className="bg-gray-700 text-xs md:text-base lg:text-xl tracking-wider leading-6 p-2 text-white">
                         Sender: {lamportsToSOL(details.meta.preBalances[0])} SOL
                       </Badge>
-                      <Badge className="bg-gray-700 text-sm md:text-base lg:text-xl tracking-wider leading-6 p-2 text-white">
+                      <Badge className="bg-gray-700 text-xs md:text-basee lg:text-xl tracking-wider leading-6 p-2 text-white">
                         Receiver: {lamportsToSOL(details.meta.preBalances[1])} SOL
                       </Badge>
                     </div>
@@ -133,10 +133,10 @@ const TransactionDetailsPage = () => {
                       Post Balance:
                     </p>
                     <div className="flex gap-2">
-                      <Badge className="bg-gray-700 text-sm md:text-base lg:text-xl p-2 tracking-wider leading-6 text-white">
+                      <Badge className="bg-gray-700 text-xs md:text-base lg:text-xl p-2 tracking-wider leading-6 text-white">
                         Sender: {lamportsToSOL(details.meta.postBalances[0])} SOL
                       </Badge>
-                      <Badge className="bg-gray-700 text-sm md:text-base lg:text-xl p-2 tracking-wider leading-6 text-white">
+                      <Badge className="bg-gray-700 text-xs md:text-base lg:text-xl p-2 tracking-wider leading-6 text-white">
                         Receiver: {lamportsToSOL(details.meta.postBalances[1])} SOL
                       </Badge>
                     </div>
