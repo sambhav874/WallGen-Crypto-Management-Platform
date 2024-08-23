@@ -168,18 +168,18 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
       console.log("Please select a wallet and enter a recipient address.");
       return;
     }
-
+  
     try {
       const wallet = solWallets.find((w) => w.publicKey === selectedWallet);
-
+  
       if (!wallet) {
         console.log("Selected wallet not found.");
         return;
       }
-
+  
       const block = await connection.getLatestBlockhash();
       const amountInLamports = solToLamports(parseFloat(amount));
-
+  
       const transaction = new Transaction({
         recentBlockhash: block.blockhash,
         feePayer: wallet.keypair.publicKey,
@@ -190,46 +190,46 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
           lamports: amountInLamports,
         })
       );
-
+  
       transaction.sign(wallet.keypair);
-
-      
-
+  
+      // Log transaction details
+      console.log("Transaction Details:", {
+        blockhash: block.blockhash,
+        lastValidBlockHeight: block.lastValidBlockHeight,
+      });
+  
       const txId = await connection.sendTransaction(transaction, [wallet.keypair], {
         skipPreflight: false,
         preflightCommitment: "confirmed",
-        maxRetries: 2
+        maxRetries: 3 // Increase retries if needed
       });
 
-
+      setTransactions((prev) => {
+        const updatedTransactions = [...prev, txId];
+        localStorage.setItem('transactions', JSON.stringify(updatedTransactions));
+        return updatedTransactions;
+      });
+  
       await connection.confirmTransaction({
         blockhash: block.blockhash,
         lastValidBlockHeight: block.lastValidBlockHeight,
         signature: txId
-       });
-
-       console.log(txId);
-
-       
-
-      
-      setTransactions((prev) => [...prev, txId]);
-
-      await fetch("/api/transactions", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ transaction: txId }),
       });
-
+  
       console.log(`Transaction sent: ${txId}`);
+  
+      setTransactions((prev) => [...prev, txId]);
+  
+    
+      
+
       router.push("/transactions");
     } catch (error) {
       console.log("Error sending a transaction:", error);
     }
   };
-
+  
   return (
     <>
       <Button

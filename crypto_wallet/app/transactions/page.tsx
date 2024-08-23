@@ -6,26 +6,11 @@ const TransactionsPage = () => {
   const [transactions, setTransactions] = useState<string[]>([]);
 
   useEffect(() => {
-    const fetchTransactions = async () => {
-      try {
-        const response = await fetch("/api/transactions", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const data = await response.json();
-        
-        setTransactions(data || []);
-      } catch (err) {
-        console.log(`Error fetching the transactions: ${err}`);
-      }
-    };
-
-    fetchTransactions();
+    const storedTransactions = localStorage.getItem('transactions');
+    if (storedTransactions) {
+      setTransactions(JSON.parse(storedTransactions));
+    }
   }, []);
-
-  
 
   return (
     <div className="bg-gray-900 text-white p-6 min-h-screen">
