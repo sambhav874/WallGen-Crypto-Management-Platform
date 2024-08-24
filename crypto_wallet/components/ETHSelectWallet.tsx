@@ -8,7 +8,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Label } from "./label";
+import { Label } from "./ui/label";
 
 interface WalletSelectionProps {
   ethWallets: { publicKey: string }[];

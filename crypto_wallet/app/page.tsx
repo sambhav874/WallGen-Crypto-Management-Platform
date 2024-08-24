@@ -1,27 +1,36 @@
-'use client'
+'use client';
+
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { generateMnemonic } from "bip39";
 import { useState } from "react";
-import SolanaWallet from '../components/ui/SolanaWallet';
-import EthWallet from '../components/ui/EthWallet';
+import SolanaWallet from '../components/SolanaWallet';
+import EthWallet from '../components/EthWallet';
 import Link from "next/link";
 import { Textarea } from "@/components/ui/textarea";
+import NetworkSwitcher from '@/components/NetworkSwitcher'; // Import the NetworkSwitcher component
 
 export default function Home() {
+
+
+  
   const [mnemonic, setMnemonic] = useState("");
 
   return (
     <main className="min-h-screen flex flex-col items-center bg-slate-950 justify-between p-4 md:p-6 lg:p-8">
       {/* Links */}
-      
-        <Link href='/transactions-explorer' className="border border-gray-600 bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300 px-4 absolute md:top-10 md:left-10 left-2 top-2 md:p-5 space-x-2 py-2 rounded-xl text-sm md:text-lg">
-          Transactions Explorer
-        </Link>
-        <Link href='/transactions' className="border border-gray-600 bg-gray-800 text-white hover:bg-white absolute md:top-10 md:right-10 md:p-5  right-2 top-2 space-x-2 hover:text-gray-800 transition-colors duration-300 px-4 py-2 rounded-xl text-sm md:text-lg">
-          Transactions
-        </Link>
-      
+      <Link
+        href="/transactions-explorer"
+        className="border border-gray-600 bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300 px-4 absolute md:top-10 md:left-10 left-2 top-2 md:p-5 space-x-2 py-2 rounded-xl text-sm md:text-lg"
+      >
+        Transactions Explorer
+      </Link>
+      <Link
+        href="/transactions"
+        className="border border-gray-600 bg-gray-800 text-white hover:bg-white absolute md:top-10 md:right-10 md:p-5 right-2 top-2 space-x-2 hover:text-gray-800 transition-colors duration-300 px-4 py-2 rounded-xl text-sm md:text-lg"
+      >
+        Transactions
+      </Link>
 
       {/* Title */}
       <div className="flex justify-center items-center mb-8 mt-16">
@@ -30,10 +39,14 @@ export default function Home() {
         </p>
       </div>
 
+      {/* Network Switcher */}
+      <div className="mb-8">
+        <NetworkSwitcher />
+      </div>
+
       {/* Mnemonic Input and Create Button */}
       <div className="flex flex-col items-center w-1/2 gap-6 mb-8">
         <Textarea
-          
           className="w-full max-w-full text-center text-white bg-gray-700 border border-gray-600"
           value={mnemonic}
           readOnly

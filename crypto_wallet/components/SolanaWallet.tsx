@@ -9,8 +9,8 @@ import {
   Transaction,
 } from "@solana/web3.js";
 import nacl from "tweetnacl";
-import { Button } from "./button";
-import { Input } from "./input";
+import { Button } from "./ui/button";
+import { Input } from "./ui/input";
 import {
   Card,
   CardContent,
@@ -18,12 +18,12 @@ import {
   CardFooter,
   CardHeader,
   CardTitle,
-} from "./card";
-import { Label } from "./label";
+} from "./ui/card";
+import { Label } from "./ui/label";
 import SolWalletSelection from "./SOLSelectWallet";
-import { Textarea } from "./textarea";
+import { Textarea } from "./ui/textarea";
 import { useRouter } from "next/navigation";
-import { Badge } from "./badge";
+import { Badge } from "./ui/badge";
 
 type WalletInfo = {
   publicKey: string;

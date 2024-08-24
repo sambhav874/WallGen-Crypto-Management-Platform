@@ -2,9 +2,9 @@ import { useState } from "react";
 import { mnemonicToSeed } from "bip39";
 import  {ethers, Wallet,  HDNodeWallet }   from "ethers";
 
-import { Button } from "./button";
-import { Label } from "./label";
-import { Input } from "./input";
+import { Button } from "./ui/button";
+import { Label } from "./ui/label";
+import { Input } from "./ui/input";
 import {
   Card,
   CardHeader,
@@ -12,13 +12,13 @@ import {
   CardDescription,
   CardContent,
   CardFooter,
-} from "./card";
+} from "./ui/card";
 import axios from 'axios';
 
 
 import EthWalletSelection from "./ETHSelectWallet";
-import { Textarea } from "./textarea";
-import { Badge } from "./badge";
+import { Textarea } from "./ui/textarea";
+import { Badge } from "./ui/badge";
 
 
 
