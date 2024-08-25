@@ -1,6 +1,6 @@
 import { PublicKey , Transaction } from "@solana/web3.js";
 
-export function getExplorerUrl(
+ function getExplorerUrl(
     endpoint : string ,
     viewTypeOrItemAddress: "inspector" | PublicKey | string,
     itemType = "address"
@@ -19,3 +19,5 @@ export function getExplorerUrl(
 
     return `https://explorer.solana.com/${itemType}/${viewTypeOrItemAddress}${getClusterUrlParam()}`;
 }
+
+export default getExplorerUrl;
