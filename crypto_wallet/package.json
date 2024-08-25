@@ -28,6 +28,7 @@
     "ethers": "^6.13.2",
     "immer": "^10.1.1",
     "next": "14.2.5",
+    "pino-pretty": "^11.2.2",
     "react": "^18",
     "react-dom": "^18",
     "react-hot-toast": "^2.4.1",

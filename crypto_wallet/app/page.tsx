@@ -8,7 +8,12 @@ import SolanaWallet from '../components/SolanaWallet';
 import EthWallet from '../components/EthWallet';
 import Link from "next/link";
 import { Textarea } from "@/components/ui/textarea";
-import NetworkSwitcher from '@/components/NetworkSwitcher'; // Import the NetworkSwitcher component
+import NetworkSwitcher from '@/components/NetworkSwitcher'; 
+import {WalletMultiButton} from "@solana/wallet-adapter-react-ui";
+import { FC } from "react";
+
+import './globals.css'
+
 
 export default function Home() {
 
@@ -31,6 +36,8 @@ export default function Home() {
       >
         Transactions
       </Link>
+      <WalletMultiButton  />
+      
 
       {/* Title */}
       <div className="flex justify-center items-center mb-8 mt-16">
