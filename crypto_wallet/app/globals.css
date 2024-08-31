@@ -343,3 +343,54 @@ Button{
     font-size: 18px;
   }
 }
+
+
+/* globals.css */
+@keyframes marquee-up {
+  from {
+    transform: translateY(100%);
+  }
+  to {
+    transform: translateY(-100%);
+  }
+}
+
+@keyframes marquee-down {
+  from {
+    transform: translateY(-100%);
+  }
+  to {
+    transform: translateY(100%);
+  }
+}
+
+.marquee-up, .marquee-down {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.marquee-up {
+  animation: marquee-up 20s linear infinite;
+}
+
+.marquee-down {
+  animation: marquee-down 20s linear infinite;
+}
+
+.marquee-content {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  justify-content: space-around;
+}
+
+.marquee-content img {
+  width: auto;
+  height: 100%;
+  object-fit: cover;
+  margin: 0 10px;
+}

@@ -3,22 +3,29 @@
 import React, { FC } from 'react';
 import dynamic from 'next/dynamic';
 import { useNetworkConfiguration } from '@/contexts/NetworkConfigurationProvider';
+import { Select, SelectContent, SelectItem,  SelectTrigger , SelectValue } from './ui/select';
+ // Adjust import based on actual path
 
 const NetworkSwitcher: FC = () => {
     const { networkConfiguration, setNetworkConfiguration } = useNetworkConfiguration();
     console.log(networkConfiguration);
 
     return (
-        <div className="flex items-center">
-            <select
+        <div className="flex mt-6 items-center">
+            <Select
                 value={networkConfiguration}
-                onChange={(e) => setNetworkConfiguration(e.target.value || 'devnet')}
-                className="select max-w-xs border-none bg-transparent outline-0"
+                onValueChange={(value) => setNetworkConfiguration(value || 'devnet')}
+                
             >
-                <option value="mainnet-beta">Main</option>
-                <option value="devnet">Dev</option>
-                <option value="testnet">Test</option>
-            </select>
+                <SelectTrigger className=" bg-slate-950 border border-white outline-0">
+                    <SelectValue placeholder="Select Network" />
+                </SelectTrigger>
+                <SelectContent>
+                    <SelectItem value="mainnet-beta">Main</SelectItem>
+                    <SelectItem value="devnet">Dev</SelectItem>
+                    <SelectItem value="testnet">Test</SelectItem>
+                </SelectContent>
+            </Select>
         </div>
     );
 };

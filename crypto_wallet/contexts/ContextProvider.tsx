@@ -1,4 +1,3 @@
-// WalletContextProvider.tsx
 'use client';
 import React, { FC, ReactNode, useCallback, useMemo } from 'react';
 import { WalletAdapterNetwork, WalletError } from "@solana/wallet-adapter-base";
@@ -19,13 +18,14 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
 
     let endpoint: string;
     if (network === 'mainnet-beta') {
-        endpoint = `https://solana-mainnet.g.alchemy.com/${process.env.NEXT_PUBLIC_SOL_MAIN_API_ROUTE}`; // Replace with your mainnet URL
-    } else if(network ==='devnet'){
-        endpoint = `https://solana-devnet.g.alchemy.com/${process.env.NEXT_PUBLIC_SOL_API_ROUTE}`;
-    }else{
-        endpoint = originalEndpoint;
-    }
-    
+    endpoint = `https://solana-mainnet.g.alchemy.com/${process.env.NEXT_PUBLIC_SOL_MAIN_API_ROUTE}`;
+} else if (network === 'devnet') {
+    endpoint = `https://solana-devnet.g.alchemy.com/${process.env.NEXT_PUBLIC_SOL_API_ROUTE}`;
+} else if (network === 'testnet') {
+    endpoint = `https://api.testnet.solana.com`;
+} else {
+    endpoint = originalEndpoint;
+}
 
     const wallets = useMemo(() => [
         new PhantomWalletAdapter(),
@@ -52,7 +52,8 @@ const WalletContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
     );
 };
 
-export const ContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
+
+export const ContextProvider: FC<{ children: React.ReactNode }> = ({ children }) => {
     return (
         <NetworkConfigurationProvider>
             <AutoConnectProvider>
@@ -63,4 +64,3 @@ export const ContextProvider: FC<{ children: ReactNode }> = ({ children }) => {
         </NetworkConfigurationProvider>
     );
 };
-
