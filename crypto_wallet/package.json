@@ -11,6 +11,11 @@
   "dependencies": {
     "@api/alchemy-docs": "file:.api/apis/alchemy-docs",
     "@formspree/react": "^2.5.1",
+    "@fortawesome/free-brands-svg-icons": "^6.6.0",
+    "@fortawesome/free-regular-svg-icons": "^6.6.0",
+    "@fortawesome/free-solid-svg-icons": "^6.6.0",
+    "@fortawesome/react-fontawesome": "^0.2.2",
+    "@heroicons/react": "^1.0.6",
     "@hookform/resolvers": "^3.9.0",
     "@metaplex-foundation/js": "^0.20.1",
     "@metaplex-foundation/mpl-token-metadata": "^2.13.0",

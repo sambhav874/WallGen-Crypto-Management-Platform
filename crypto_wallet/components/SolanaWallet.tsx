@@ -24,6 +24,7 @@ import SolWalletSelection from "./SOLSelectWallet";
 import { Textarea } from "./ui/textarea";
 import { useRouter } from "next/navigation";
 import { Badge } from "./ui/badge";
+import { useNetworkConfiguration } from "@/contexts/NetworkConfigurationProvider";
 
 type WalletInfo = {
   publicKey: string;
@@ -59,24 +60,29 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
   const [amount, setAmount] = useState<string>("");
   const [selectedWallet, setSelectedWallet] = useState<string>("");
   const [transactions, setTransactions] = useState<string[]>([]);
-  const [isAirdropInProgress , setIsAirdropInProgress] = useState<boolean>(false);
+  const [isAirdropInProgress, setIsAirdropInProgress] = useState<boolean>(false);
+  const { networkConfiguration } = useNetworkConfiguration();
 
-  const key = (process.env.NEXT_PUBLIC_SOL_API_ROUTE);
+  const key = process.env.NEXT_PUBLIC_SOL_API_ROUTE;
 
   const connection = new Connection(
-    `https://solana-devnet.g.alchemy.com/${key}`
+    `https://solana-${networkConfiguration}.g.alchemy.com/${key}`
   );
 
   const airdropSol = async (publicKey: PublicKey) => {
+    if (networkConfiguration !== "devnet") {
+      console.log("Airdrop is only available on devnet.");
+      return;
+    }
+
     try {
       const latestBlockhash = await connection.getLatestBlockhash();
   
       const airdropSignature = await connection.requestAirdrop(
         publicKey,
-        solToLamports(2) // Request 2 SOL
+        solToLamports(2) 
       );
   
-      
       await connection.confirmTransaction({
         signature: airdropSignature,
         blockhash: latestBlockhash.blockhash,
@@ -88,7 +94,6 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
       console.log("Error during airdrop:", err);
     }
   };
-  
 
   const fetchBalance = async (publicKey: string) => {
     try {
@@ -150,7 +155,6 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
     }
   };
   
-
   const togglePrivateKeys = (publicKey: string) => {
     try {
       setPrivateKeys((prev) => ({
@@ -219,9 +223,6 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
       console.log(`Transaction sent: ${txId}`);
   
       setTransactions((prev) => [...prev, txId]);
-  
-    
-      
 
       router.push("/transactions");
     } catch (error) {
@@ -232,12 +233,12 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
   return (
     <>
       <Button
-  onClick={addWallet}
-  className={`mb-6 bg-gray-800 text-white ${isAirdropInProgress ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white hover:text-gray-800'} transition-colors duration-300`}
-  disabled={isAirdropInProgress}
->
-  {isAirdropInProgress ? 'Airdrop In Progress...' : 'Add Wallet'}
-</Button>
+        onClick={addWallet}
+        className={`mb-6 bg-gray-800 text-white ${isAirdropInProgress ? 'opacity-50 cursor-not-allowed' : 'hover:bg-white hover:text-gray-800'} transition-colors duration-300`}
+        disabled={isAirdropInProgress}
+      >
+        {isAirdropInProgress ? 'Airdrop In Progress...' : 'Add Wallet'}
+      </Button>
 
       {/* Recipient Address Input */}
       <div className="mb-6 w-full max-w-md mx-auto">
@@ -271,77 +272,51 @@ const SolanaWallet: React.FC<SolanaWalletProps> = ({ mnemonic }) => {
 
       <Button
         onClick={sendTransactions}
-        className="bg-gray-800 text-white hover:bg-white mb-8 hover:text-gray-800 transition-colors duration-300"
+        className="mb-6 bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300"
       >
-        Send Transaction
+        Send SOL
       </Button>
 
-      <div className="bg-slate-950 text-white w-full">
-        <div className="w-full  flex justify-center items-center flex-col">
-          {solWallets.map((wallet, index) => (
-            <Card
-              key={`${wallet.publicKey}-${index}`}
-              className="bg-slate-950 shadow-lg w-auto hover:shadow-xl transition-shadow duration-300 rounded-lg mb-6"
-            >
+      {solWallets.length > 0 && (
+        <div className="flex flex-col space-y-4">
+          {solWallets.map((wallet) => (
+            <Card key={wallet.publicKey} className="bg-gray-800">
               <CardHeader>
-                <CardTitle className="text-white">Wallet</CardTitle>
-                <CardDescription className="text-white">
-                  <span className="text-xs text-gray-500">
-                    Click here to copy your public key.
-                  </span>
-                </CardDescription>
+                <CardTitle className="text-white">Wallet {wallet.publicKey}</CardTitle>
               </CardHeader>
-              <CardContent className="flex flex-col space-y-2">
-                <div className="flex items-center justify-center">
-                  <Badge
-                    onClick={() =>
-                      navigator.clipboard.writeText(wallet.publicKey)
-                    }
-                    className="font-bold text-gray-400 text-xs md:text-lg hover:text-white cursor-pointer"
-                  >
-                    {wallet.publicKey}
-                  </Badge>
-                  
-                </div>
-                {privateKeys[wallet.publicKey] && (
-                  <div>
-                    <Label className="text-white">Private Key</Label>
-                    <Textarea
-                      value={wallet.privateKey}
-                      readOnly
-                      className="text-white bg-gray-800 p-2 w-full h-24"
-                    />
-                  </div>
-                )}
-                
-                <div className="text-white">
-                  Balance: {balances[wallet.publicKey] || 0} SOL
-                </div>
-                <Button
-                    onClick={() => togglePrivateKeys(wallet.publicKey)}
-                    className="bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300"
-                  >
-                    {privateKeys[wallet.publicKey] ? "Hide Private Key" : "Show Private Key"}
-                  </Button>
+              <CardContent>
+                <CardDescription className="text-white">
+                  Balance: {balances[wallet.publicKey] ? `${balances[wallet.publicKey]} SOL` : "Loading..."}
+                </CardDescription>
+                <CardDescription className="text-white">
+                  Private Key: {privateKeys[wallet.publicKey] ? wallet.privateKey : "Hidden"}
+                </CardDescription>
               </CardContent>
-              <CardFooter className="flex justify-between items-center">
-              
+              <CardFooter>
                 <Button
-                  onClick={() => airdropSol(new PublicKey(wallet.publicKey))}
+                  onClick={() => togglePrivateKeys(wallet.publicKey)}
                   className="bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300"
                 >
-                  Request 2 SOL
-                </Button>
-
-                <Button
-                  onClick={() => fetchBalance(wallet.publicKey)}
-                  className="bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300 "
-                >
-                  Fetch Balance
+                  {privateKeys[wallet.publicKey] ? "Hide Private Key" : "Show Private Key"}
                 </Button>
               </CardFooter>
             </Card>
           ))}
+        </div>
+      )}
+
+<div className="w-full max-w-md mx-auto mt-10">
+        <h3 className="text-white text-lg mb-4">Transaction History</h3>
+        <div className="bg-gray-800 p-4 rounded-lg">
+          {transactions.length === 0 ? (
+            <p className="text-gray-500">No transactions yet.</p>
+          ) : (
+            <ul className="list-disc pl-5 space-y-2">
+              {transactions.map((tx, index) => (
+                <li key={index} className="text-white">{tx}</li>
+              ))}
+            </ul>
+          )}
         </div>
       </div>
     </>

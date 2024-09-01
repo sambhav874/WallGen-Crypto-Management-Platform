@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
 import LoadingSpinner from "@/components/ui/loading-spinner";
+import Link from "next/link";
 
 const Donate: FC = () => {
   const { connection } = useConnection();
@@ -65,7 +66,14 @@ const Donate: FC = () => {
   }, [publicKey, connection, amount, sendTransaction]);
 
   return (
-    <div className="bg-slate-950 min-h-screen flex justify-center items-center p-6">
+    <div className="bg-slate-950 min-h-screen flex flex-col justify-center items-center p-6 space-y-8">
+      <div className="text-center">
+        <h1 className="text-4xl font-bold text-white mb-4">Support My Work</h1>
+        <p className="text-gray-400 max-w-lg mx-auto">
+          Your donation directly supports my work in building and enhancing this platform. Whether large or small, your contribution helps me continue developing innovative features and maintaining this service. Thank you for your support!
+        </p>
+      </div>
+
       <Card className="w-full max-w-md bg-slate-900 text-white p-8 rounded-lg shadow-lg">
         <CardHeader>
           <CardTitle className="text-2xl text-center">Donate SOL</CardTitle>
@@ -92,6 +100,13 @@ const Donate: FC = () => {
           <p className="text-gray-400 text-center">Your balance: {balance} SOL</p>
         </CardFooter>
       </Card>
+
+      
+
+      <div className="text-center text-gray-400 mt-8">
+        <p className="mb-4">Thank you for your generous support!</p>
+        <p className="text-sm">For any inquiries or just to say hi, feel free to reach out at <a href="mailto:sambhavjain874@gmail.com" className="text-indigo-500 hover:underline">sambhavjain874@gmail.com</a></p>
+      </div>
     </div>
   );
 };
