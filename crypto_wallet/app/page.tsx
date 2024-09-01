@@ -1,11 +1,12 @@
 'use client';
 
-import { FC, useState } from "react";
+import { FC, useEffect } from "react";
 import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
 import NetworkSwitcher from '@/components/NetworkSwitcher';
 import Link from "next/link";
 import { Drawer, DrawerTrigger, DrawerContent, DrawerClose } from '@/components/ui/drawer';
 import './globals.css';
+import Image from "next/image";
 
 const imagesUp = [
   '/image-1.jpg',
@@ -31,8 +32,8 @@ const Home: FC = () => {
         <DrawerTrigger className="absolute left-1/3 right-1/3 top-2/3 bg-gray-900 p-4 rounded-full z-50 text-center mono font-extralight hover:font-bold text-lg text-white duration-300 hover:text-black hover:bg-white">
           Our Services
         </DrawerTrigger>
-        <DrawerContent className="bg-slate-950 p-6 w-full   shadow-lg rounded-lg z-50">
-          <DrawerClose className="text-white my-4 hover:bg-slate-800 p-2 rounded-full">
+        <DrawerContent className="bg-slate-950 p-6 w-full shadow-lg rounded-lg z-50">
+          <DrawerClose className="bg-gray-900 p-4 rounded-full z-50 text-center mono font-extralight hover:font-bold text-lg text-white duration-300 my-4 hover:text-black hover:bg-white">
             Close
           </DrawerClose>
           <div className="flex flex-col space-y-4">
@@ -53,7 +54,7 @@ const Home: FC = () => {
           <div className="marquee-up">
             <div className="marquee-content flex flex-row">
               {imagesUp.map((src, index) => (
-                <img key={index} src={src} alt={`Marquee image ${index + 1}`} className="object-contain w-full h-full" />
+                <Image key={index} src={src} width={800} height={800} alt={`Marquee image ${index + 1}`} className="object-cover w-full h-full" />
               ))}
             </div>
           </div>
@@ -62,7 +63,7 @@ const Home: FC = () => {
           <div className="marquee-down">
             <div className="marquee-content flex flex-row">
               {imagesDown.map((src, index) => (
-                <img key={index} src={src} alt={`Marquee image ${index + 1}`} className="object-contain w-full h-full" />
+                <Image key={index} src={src} width={800} height={800} alt={`Marquee image ${index + 1}`} className="object-cover w-full h-full" />
               ))}
             </div>
           </div>

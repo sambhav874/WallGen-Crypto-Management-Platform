@@ -77,7 +77,7 @@ const Airdrop: FC = () => {
         </CardContent>
         <CardFooter className="text-center">
           <p className="text-gray-400 text-sm">Ensure you have a connected wallet to receive the airdrop.</p>
-          <p className="text-gray-400 text-sm mt-2">For more information on SOL and its usage, visit <a href="https://solana.com" className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">Solana's official website</a>.</p>
+          <p className="text-gray-400 text-sm mt-2">For more information on SOL and its usage, visit <a href="https://solana.com" className="text-blue-400 hover:underline" target="_blank" rel="noopener noreferrer">Solana official website</a>.</p>
         </CardFooter>
       </Card>
     </div>

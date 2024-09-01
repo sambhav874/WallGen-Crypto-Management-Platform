@@ -68,6 +68,27 @@
   }
 }
 
+/* globals.css */
+html, body {
+  font-family: 'YourPreferredFont', ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+}
+
+body {
+  background-color: #1e293b; /* Example: bg-slate-950 */
+  color: #f9fafb; /* Example: text-white */
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: inherit; /* Ensure links use the same font */
+  text-decoration: none;
+}
+
+button {
+  font-family: inherit; /* Ensure buttons use the same font */
+}
+
 Button{
   @apply border border-gray-600  bg-gray-800 text-white hover:bg-white hover:text-gray-800 transition-colors duration-300;
 }
@@ -393,4 +414,37 @@ Button{
   height: 100%;
   object-fit: cover;
   margin: 0 10px;
+}
+
+
+.shine-effect {
+  position: relative;
+  
+  overflow: hidden;
+
+  @apply bg-slate-950;
+  
+}
+
+.shine-effect::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: -100%;
+  width: 100%;
+  height: 100%;
+  
+  animation: shine 3s infinite;
+
+  @apply bg-slate-950;
+  
+}
+
+@keyframes shine {
+  0% {
+    left: -100%;
+  }
+  100% {
+    left: 100%;
+  }
 }

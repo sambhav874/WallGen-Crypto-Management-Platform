@@ -12,12 +12,12 @@ const Footer = () => {
         <div className="flex flex-col md:flex-row justify-between items-start">
           <div className="mb-8 md:mb-0">
             <div className="flex items-center mb-4">
-              <div className="bg-white p-2 rounded-full">
-                {/* Insert your logo or SVG icon here */}
-                <img src="/path-to-your-logo.svg" alt="Logo" className="w-8 h-8" />
+              <div className=" p-2 rounded-full">
+               
+                <p className='shine-effect text-5xl font-extralight mono '>WallGen</p>
               </div>
             </div>
-            <p className="text-gray-400">© 2024 YourCompany. All rights reserved.</p>
+            <p className="text-gray-400">© 2024 WallGen. All rights reserved.</p>
           </div>
 
           <div className="flex flex-col md:flex-row space-y-8 md:space-y-0 md:space-x-12">
@@ -72,15 +72,15 @@ const Footer = () => {
                 For the best experience, we recommend you to use Phantom wallet.
               </p>
               <div className="flex space-x-8 ">
-                <a href="https://www.github.com/sambhav874" target="_blank" rel="noopener noreferrer" className="text-white hover:text-purple-600">
+                <Link href="https://www.github.com/sambhav874" target="_blank" rel="noopener noreferrer" className="text-white hover:text-purple-600">
                   <FontAwesomeIcon icon={faGithub} className="w-8 h-8" />
-                </a>
-                <a href="https://www.instagram.com/smhbvv_" target="_blank" rel="noopener noreferrer" className="text-white hover:text-purple-600">
+                </Link>
+                <Link href="https://www.instagram.com/smhbvv_" target="_blank" rel="noopener noreferrer" className="text-white hover:text-purple-600">
                   <FontAwesomeIcon icon={faInstagram} className="w-8 h-8" />
-                </a>
-                <a href="https://www.linkedin.com/in/sambhavjain19" target="_blank" rel="noopener noreferrer" className="text-white hover:text-purple-600">
+                </Link>
+                <Link href="https://www.linkedin.com/in/sambhavjain19" target="_blank" rel="noopener noreferrer" className="text-white hover:text-purple-600">
                   <FontAwesomeIcon icon={faLinkedin} className="w-8 h-8" />
-                </a>
+                </Link>
               </div>
             </div>
           </div>

@@ -69,8 +69,11 @@ const Donate: FC = () => {
     <div className="bg-slate-950 min-h-screen flex flex-col justify-center items-center p-6 space-y-8">
       <div className="text-center">
         <h1 className="text-4xl font-bold text-white mb-4">Support My Work</h1>
-        <p className="text-gray-400 max-w-lg mx-auto">
+        <p className="text-gray-400 max-w-lg mx-auto mb-6">
           Your donation directly supports my work in building and enhancing this platform. Whether large or small, your contribution helps me continue developing innovative features and maintaining this service. Thank you for your support!
+        </p>
+        <p className="text-red-500 font-semibold">
+          Please make sure you are connected to the <strong>Mainnet</strong> network on the homepage before proceeding with the donation.
         </p>
       </div>
 
@@ -100,8 +103,6 @@ const Donate: FC = () => {
           <p className="text-gray-400 text-center">Your balance: {balance} SOL</p>
         </CardFooter>
       </Card>
-
-      
 
       <div className="text-center text-gray-400 mt-8">
         <p className="mb-4">Thank you for your generous support!</p>
